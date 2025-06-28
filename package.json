@@ -1,6 +1,14 @@
 {
   "name": "dynmail",
+  "version": "0.1.0",
   "description": "A modern and dynamic Email SDK written in TypeScript",
+  "scripts": {
+    "format": "biome format"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fleet5/dynmail.git"
+  },
   "devDependencies": {
     "@biomejs/biome": "2.0.6",
     "@types/bun": "^1.2.17",
