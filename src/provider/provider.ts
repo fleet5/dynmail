@@ -1,3 +1,4 @@
+import type { Sender } from '~/sender/sender'
 import type { AsyncResult } from '~/util'
 
 export class Provider<
@@ -40,7 +41,7 @@ type ProviderConstructorParams<
 }
 
 export type SendMailParams = {
-  from: string
+  from: Sender
   to: string | string[]
   subject: string
   html: string

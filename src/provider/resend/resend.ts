@@ -22,9 +22,9 @@ export function resend<ID extends string = 'default'>(
     )
   }
 
-  function parseEmailOptions(sendParams: SendMailParams): ResendSendMailParams {
+  function parseSendParams(sendParams: SendMailParams): ResendSendMailParams {
     return {
-      from: sendParams.from,
+      from: sendParams.from.toString(),
       to: sendParams.to,
       bcc: sendParams.bcc,
       cc: sendParams.cc,
@@ -42,7 +42,7 @@ export function resend<ID extends string = 'default'>(
     id: params.id,
     provider: 'resend',
     send: async (sendParams) => {
-      const emailOptions = parseEmailOptions(sendParams)
+      const emailOptions = parseSendParams(sendParams)
       const idempotencyKey = randomUUID()
 
       if (!resolvedApiKey) {

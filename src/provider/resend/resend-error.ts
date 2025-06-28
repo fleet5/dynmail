@@ -90,7 +90,6 @@ export class ValidationError extends ResendError {
   }
 }
 
-// 401 Errors
 export class MissingApiKeyError extends ResendError {
   constructor() {
     super(
@@ -113,7 +112,6 @@ export class RestrictedApiKeyError extends ResendError {
   }
 }
 
-// 403 Errors
 export class InvalidApiKeyError extends ResendError {
   constructor() {
     super(
