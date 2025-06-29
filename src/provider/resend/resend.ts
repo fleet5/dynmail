@@ -4,7 +4,7 @@ import { Provider, type SendMailParams } from '../provider'
 import { type AnyResendError, createResendError } from './resend-error'
 
 export function resend<const ID extends string>(
-  params?: ResendParams<ID> & { id: ID }
+  params: ResendParams<ID> & { id: ID }
 ): Resend<ID>
 export function resend(
   params?: ResendParams<'default'> & { id?: never }
@@ -99,6 +99,8 @@ export function resend<ID extends string = 'default'>(
     }
   })
 }
+
+const r = resend()
 
 type Resend<ID extends string = 'default'> = Provider<
   ID,
