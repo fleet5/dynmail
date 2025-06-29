@@ -1,6 +1,10 @@
 import { randomUUID } from 'node:crypto'
 import { pkg } from '~/pkg'
-import { Provider, type SendMailParams } from '../provider'
+import {
+  Provider,
+  type ProviderOptions,
+  type SendMailParams
+} from '../provider'
 import { type AnyResendError, createResendError } from './resend-error'
 
 export function resend<const ID extends string>(
@@ -22,7 +26,9 @@ export function resend<ID extends string = 'default'>(
     )
   }
 
-  function parseSendParams(sendParams: SendMailParams): ResendSendMailParams {
+  function parseSendParams(
+    sendParams: SendMailParams<ResendProviderOptions>
+  ): ResendSendMailParams {
     return {
       from: sendParams.from.toString(),
       to: sendParams.to,
@@ -32,15 +38,22 @@ export function resend<ID extends string = 'default'>(
       subject: sendParams.subject,
       html: sendParams.html,
       text: sendParams.text,
-      headers: sendParams.headers
+      headers: sendParams.headers,
+      attachments: sendParams.attachments?.map((attachment) => ({
+        filename: attachment.filename,
+        content: attachment.content,
+        path: attachment.path,
+        content_type: attachment.contentType
+      }))
     }
   }
 
   let resolvedApiKey: string | undefined
 
-  return new Provider<ID, 'resend', AnyResendError>({
+  return new Provider<ID, 'resend', AnyResendError, ResendProviderOptions>({
     id: params.id,
     provider: 'resend',
+    options: { supportsAttachments: true },
     send: async (sendParams) => {
       const emailOptions = parseSendParams(sendParams)
       const idempotencyKey = randomUUID()
@@ -100,13 +113,16 @@ export function resend<ID extends string = 'default'>(
   })
 }
 
-const r = resend()
-
 type Resend<ID extends string = 'default'> = Provider<
   ID,
   'resend',
-  AnyResendError
+  AnyResendError,
+  ResendProviderOptions
 >
+
+type ResendProviderOptions = ProviderOptions & {
+  supportsAttachments: true
+}
 
 type ResendParams<ID extends string = 'default'> = {
   /**
@@ -134,4 +150,10 @@ type ResendSendMailParams = {
   html: string
   text?: string
   headers?: Record<string, string>
+  attachments?: Array<{
+    filename: string
+    content?: string | Buffer
+    path?: string
+    content_type?: string
+  }>
 }

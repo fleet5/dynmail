@@ -1,5 +1,9 @@
 import { pkg } from '~/pkg'
-import { Provider, type SendMailParams } from '../provider'
+import {
+  Provider,
+  type ProviderOptions,
+  type SendMailParams
+} from '../provider'
 import { type AnyPlunkError, createPlunkError } from './plunk-error'
 
 export function plunk<const ID extends string>(
@@ -21,7 +25,9 @@ export function plunk<ID extends string = 'default'>(
     )
   }
 
-  function parseSendParams(sendParams: SendMailParams): PlunkSendMailParams {
+  function parseSendParams(
+    sendParams: SendMailParams<PlunkProviderOptions>
+  ): PlunkSendMailParams {
     return {
       to: sendParams.to,
       subject: sendParams.subject,
@@ -38,9 +44,10 @@ export function plunk<ID extends string = 'default'>(
   let resolvedUrl: string | undefined
   let resolvedApiKey: string | undefined
 
-  return new Provider<ID, 'plunk', AnyPlunkError>({
+  return new Provider<ID, 'plunk', AnyPlunkError, PlunkProviderOptions>({
     id: params.id,
     provider: 'plunk',
+    options: { supportsAttachments: false },
     send: async (sendParams) => {
       const emailOptions = parseSendParams(sendParams)
 
@@ -114,7 +121,16 @@ export function plunk<ID extends string = 'default'>(
   })
 }
 
-type Plunk<ID extends string = 'default'> = Provider<ID, 'plunk', AnyPlunkError>
+type Plunk<ID extends string = 'default'> = Provider<
+  ID,
+  'plunk',
+  AnyPlunkError,
+  PlunkProviderOptions
+>
+
+type PlunkProviderOptions = ProviderOptions & {
+  supportsAttachments: false
+}
 
 type PlunkParams<ID extends string = 'default'> = {
   /**

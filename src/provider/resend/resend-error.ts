@@ -1,3 +1,9 @@
+import type { SenderNotFoundError } from '~/sender/sender'
+import type {
+  AttachmentNotSupportedByProviderError,
+  ProviderNotFoundError
+} from '../provider'
+
 export function createResendError(
   code: string,
   message?: string,
@@ -325,3 +331,6 @@ export type AnyResendError =
   | ApplicationError
   | InternalServerError
   | ResendError
+  | ProviderNotFoundError
+  | SenderNotFoundError
+  | AttachmentNotSupportedByProviderError

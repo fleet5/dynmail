@@ -28,7 +28,7 @@ export function sender<ID extends string = 'default'>(
 
 export class Sender<ID extends string = 'default'> {
   public id: ID
-  public name: string
+  public name: string | undefined
   public email: string
 
   public constructor(params: SenderConstructorParams<ID>) {
@@ -38,7 +38,19 @@ export class Sender<ID extends string = 'default'> {
   }
 
   public toString(): string {
+    if (!this.name) return this.email
+
     return `${this.name} <${this.email}>`
+  }
+}
+
+export class SenderNotFoundError extends Error {
+  public constructor(
+    senderId: string,
+    message = `Sender with ID '${senderId}' not found.`
+  ) {
+    super(message)
+    this.name = 'SenderNotFoundError'
   }
 }
 
@@ -53,7 +65,7 @@ type SenderConstructorParams<ID extends string = 'default'> = {
    * The sender's name. This is the name that will be displayed in the "From"
    * field of the email.
    */
-  name: string
+  name?: string
 
   /**
    * The sender's email address. This is the email address that will be used

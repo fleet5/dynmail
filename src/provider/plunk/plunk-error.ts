@@ -1,3 +1,9 @@
+import type { SenderNotFoundError } from '~/sender/sender'
+import type {
+  AttachmentNotSupportedByProviderError,
+  ProviderNotFoundError
+} from '../provider'
+
 export function createPlunkError(
   statusCode: number,
   message: string
@@ -255,3 +261,6 @@ export type AnyPlunkError =
   | RateLimitExceededError
   | InternalServerError
   | PlunkError
+  | ProviderNotFoundError
+  | SenderNotFoundError
+  | AttachmentNotSupportedByProviderError
